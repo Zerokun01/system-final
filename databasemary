@@ -1,0 +1,209 @@
+dbname = school_management_system
+name  = system;
+
+
+
+CREATE TABLE admin (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    profile_image VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE student (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    gender ENUM('Male', 'Female', 'Other') DEFAULT 'Male',
+    address TEXT NOT NULL,
+    birthdate DATE NOT NULL,
+    course VARCHAR(255) NOT NULL,
+    profile_image VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE student (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    gender ENUM('Male', 'Female', 'Other') DEFAULT 'Male',
+    address TEXT NOT NULL,
+    birthdate DATE NOT NULL,
+    course VARCHAR(255) NOT NULL,
+    profile_image VARCHAR(255),
+    verification_token VARCHAR(255), -- Unique token for email verification
+    is_verified TINYINT(1) DEFAULT 0, -- 1 for verified, 0 for not verified
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE student (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    gender ENUM('Male', 'Female', 'Other') DEFAULT 'Male',
+    address TEXT NOT NULL,
+    birthdate DATE NOT NULL,
+    course VARCHAR(255) NOT NULL,
+    profile_image VARCHAR(255),
+    verification_code VARCHAR(6), -- 6-digit verification code
+    is_verified TINYINT(1) DEFAULT 0, -- 1 for verified, 0 for not verified
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+
+CREATE TABLE student (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
+    gender ENUM('Male', 'Female', 'Other') DEFAULT 'Male',
+    course VARCHAR(255) NOT NULL,
+    address TEXT NOT NULL,
+    birthdate DATE NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    profile_image VARCHAR(255),
+    verification_code VARCHAR(6),
+    is_verified TINYINT(1) DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE student (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
+    gender ENUM('Male', 'Female', 'Other') DEFAULT 'Male',
+    course VARCHAR(255) NOT NULL,
+    address TEXT NOT NULL,
+    birthdate DATE NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    profile_image VARCHAR(255),
+    verification_code VARCHAR(6),
+    is_verified TINYINT(1) DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+DROP TABLE IF EXISTS student;
+
+
+CREATE TABLE tasks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    deadline DATETIME NOT NULL
+);
+
+CREATE TABLE task_students (
+    task_id INT,
+    student_id INT,
+    PRIMARY KEY (task_id, student_id),
+    FOREIGN KEY (task_id) REFERENCES tasks(id),
+    FOREIGN KEY (student_id) REFERENCES student(id)
+);
+
+CREATE TABLE tasks (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  description TEXT NOT NULL,
+  deadline DATE NOT NULL,
+  student_id INT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (student_id) REFERENCES student(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS tasks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    student_id INT NOT NULL,
+    deadline DATETIME NOT NULL,
+    status ENUM('pending', 'completed') DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES student(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4; 
+
+
+CREATE TABLE tasks (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255),
+  description TEXT,
+  deadline DATETIME
+);
+
+
+CREATE TABLE task_students (
+  task_id INT,
+  student_id INT,
+  PRIMARY KEY (task_id, student_id),
+  FOREIGN KEY (task_id) REFERENCES tasks(id),
+  FOREIGN KEY (student_id) REFERENCES student(id)
+);
+ALTER TABLE tasks ADD COLUMN student_id INT;
+
+ALTER TABLE tasks ADD CONSTRAINT fk_student FOREIGN KEY (student_id) REFERENCES student(id);
+
+
+CREATE TABLE tasks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    assigned_student_id INT NOT NULL,
+    deadline DATE NOT NULL,
+    status ENUM('assigned', 'submitted', 'completed') DEFAULT 'assigned',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (assigned_student_id) REFERENCES student(id)
+);
+CREATE TABLE tasks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    due_date DATE,
+    assigned_to INT, -- refers to student id
+    status VARCHAR(50) DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+ALTER TABLE tasks ADD COLUMN submission_link VARCHAR(255) DEFAULT NULL;
+
+
+
+
+CREATE TABLE audit_trail (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    action VARCHAR(255) NOT NULL,
+    description TEXT,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+SELECT audit_trail.*, users.name 
+FROM audit_trail 
+JOIN users ON audit_trail.user_id = users.id 
+ORDER BY audit_trail.timestamp DESC;
+
+
+
+CREATE TABLE IF NOT EXISTS audit_trail (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    user_type ENUM('student', 'admin') NOT NULL,
+    action VARCHAR(255) NOT NULL,
+    ip_address VARCHAR(45),
+    user_agent VARCHAR(255),
+    status VARCHAR(50),
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

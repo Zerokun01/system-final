@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Register</title>
+  <style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #e6f7ff; /* Light background */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        color: #333; /* Dark text for contrast */
+    }
+
+    .container {
+        background: #ffffff; /* White background for the container */
+        padding: 40px;
+        border-radius: 10px;
+        width: 100%;
+        max-width: 500px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        text-align: center;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #0d6efd; /* Primary color for the header */
+        font-weight: bold;
+    }
+
+    label {
+        font-weight: 600;
+        display: block;
+        margin-top: 15px;
+        font-size: 14px;
+        color: #555; /* Darker label color */
+        text-align: left;
+    }
+
+    input,
+    select {
+        width: 90%;
+        padding: 12px;
+        margin-top: 6px;
+        border-radius: 5px;
+        border: 1px solid #ccc; /* Light border */
+        background-color: #f8f9fa; /* Light input background */
+        color: #333; /* Dark text for inputs */
+        font-size: 15px;
+        outline: none;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    input:focus,
+    select:focus {
+        border-color: #0d6efd; /* Primary color on focus */
+        box-shadow: 0 0 8px rgba(13, 110, 253, 0.5); /* Light blue shadow */
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        margin-top: 20px;
+        background-color: #0d6efd; /* Primary button color */
+        border: none;
+        color: #fff;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #0a58ca; /* Darker blue on hover */
+        box-shadow: 0 4px 10px rgba(13, 110, 253, 0.5); /* Shadow on hover */
+    }
+
+    .mt-3 p {
+        margin-top: 15px;
+        font-size: 14px;
+        color: #555; /* Darker text for additional information */
+    }
+
+    a {
+        color: #0d6efd; /* Primary link color */
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    a:hover {
+        text-decoration: underline; /* Underline on hover */
+    }
+</style>
+
+</head>
+<body>
+
+  <div class="container">
+    <h2>Admin Register</h2>
+    <form id="registerForm" enctype="multipart/form-data">
+      <label for="first_name">First Name:</label>
+      <input type="text" id="first_name" name="first_name" required />
+
+      <label for="last_name">Last Name:</label>
+      <input type="text" id="last_name" name="last_name" required />
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required />
+
+      <label for="admin_password">Password:</label>
+      <input type="password" id="admin_password" name="admin_password" required />
+
+      <label for="profile_image">Profile Image:</label>
+      <input type="file" id="profile_image" name="profile_image" />
+
+      <button type="submit">Register</button>
+      <div class="mt-3">
+        <p>Already registered? <a href="login.html">Login here</a></p>
+      </div>
+    </form>
+  </div>
+
+  <!-- JavaScript for form submission -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const form = document.getElementById("registerForm");
+      if (form) {
+        form.addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          let formData = new FormData(form);
+
+          fetch("admin_register.php", {
+            method: "POST",
+            body: formData
+          })
+          .then(response => response.json())
+          .then(data => {
+            alert(data.message);
+            if (data.success) {
+              window.location.href ="login.html";
+            }
+          })
+          .catch(error => {
+            console.error("Error:", error);
+            alert("An error occurred. Please try again.");
+          });
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>

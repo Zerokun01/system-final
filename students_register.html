@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Registration</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap @5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom Styles -->
+    <style>
+    body {
+        background-color: #e6f7ff; /* Light background */
+        color: #333; /* Dark text for contrast */
+    }
+    .register-container {
+        max-width: 400px;
+        margin: 100px auto;
+        padding: 20px;
+        background-color: #ffffff; /* White background for the container */
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    select,
+    input[type="date"] {
+        background-color: #f8f9fa; /* Light input background */
+        color: #333; /* Dark text for inputs */
+        border: 1px solid #ccc; /* Light border */
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 4px; /* Rounded corners */
+    }
+    button[type="submit"] {
+        background-color: #0d6efd; /* Primary button color */
+        color: white;
+        border: none;
+        padding: 10px;
+        width: 100%;
+        border-radius: 4px; /* Rounded corners */
+        cursor: pointer; /* Pointer cursor on hover */
+    }
+    button[type="submit"]:hover {
+        background-color: #0a58ca; /* Darker blue on hover */
+    }
+    .error {
+        color: rgb(77, 42, 42); /* Error message color */
+        margin-top: 10px;
+    }
+</style>
+
+</head>
+<body>
+
+<div class="container h-100 d-flex justify-content-center align-items-center">
+    <div class="register-container">
+        <h2 class="text-center mb-4">Register Your Account</h2>
+        <form id="registerForm" enctype="multipart/form-data">
+            <input type="text" name="first_name" placeholder="First Name" required>
+            <input type="text" name="last_name" placeholder="Last Name" required>
+            <select name="gender" required>
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+            <input type="text" name="course" placeholder="Course" required>
+            <input type="text" name="address" placeholder="Address" required>
+            <input type="date" name="birthdate" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <input type="file" name="profileImage" accept="image/*">
+            <button type="submit">Sign Up</button>
+            <p class="text-center mt-3">
+                Already registered? <a href="login.html" style="color: #0d6efd;">Login here</a>
+            </p>
+        </form>
+    </div>
+</div>
+
+<!-- jQuery + Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js "></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap @5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+$(document).ready(function () {
+    $('#registerForm').on('submit', function (event) {
+        event.preventDefault();
+
+        const formData = new FormData(this);
+
+        $.ajax({
+            url: 'students_register.php',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                try {
+                    const data = typeof response === 'string' ? JSON.parse(response) : response;
+                    if (data.status === 'success') {
+                        alert(data.message);
+                        window.location.href = data.redirect || 'verify_email_manual.html';
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                } catch (error) {
+                    alert('Invalid server response:\n' + response);
+                }
+            },
+            error: function (xhr) {
+                alert('AJAX Error: ' + xhr.responseText);
+            }
+        });
+    });
+});
+</script>
+
+</body>
+</html>
